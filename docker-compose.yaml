@@ -1,0 +1,22 @@
+version: "3"
+services:
+    server-1:
+        image: distributed-cache
+        ports:
+            - "5557"
+        environment:
+            PEERS: "server-2"
+    server-2:
+        image: distributed-cache
+        ports:
+            - "5557"
+        environment:
+            PEERS: "server-1"
+    client:
+        image: distributed-cache
+        command: ipython -i client.py
+        ports:
+            - "5557"
+        depends_on:
+            - server-1
+            - server-2

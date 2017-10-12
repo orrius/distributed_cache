@@ -1,0 +1,28 @@
+version: "3"
+services:
+    test-server-1:
+        image: distributed-cache
+        ports:
+            - "5557"
+        environment:
+            PEERS: "test-server-2"
+        volumes:
+            - ./distributed-cache:/distributed-cache
+    test-server-2:
+        image: distributed-cache
+        ports:
+            - "5557"
+        environment:
+            PEERS: "test-server-1"
+        volumes:
+            - ./distributed-cache:/distributed-cache
+    tests:
+        image: distributed-cache
+        command: pytest distributed-cache
+        ports:
+            - "5557"
+        depends_on:
+            - test-server-1
+            - test-server-2
+        volumes:
+            - ./distributed-cache:/distributed-cache
